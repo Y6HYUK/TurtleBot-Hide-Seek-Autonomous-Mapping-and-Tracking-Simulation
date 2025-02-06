@@ -1,28 +1,66 @@
-#!/usr/bin/env python3
+from launch import LaunchDescription
+from launch.actions import IncludeLaunchDescription, ExecuteProcess, DeclareLaunchArgument, TimerAction
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import LaunchConfiguration
+from ament_index_python.packages import get_package_share_directory
 import os
 
-from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, ExecuteProcess
-from launch.launch_description_sources import PythonLaunchDescriptionSource
-from ament_index_python.packages import get_package_share_directory
-
 def generate_launch_description():
-    # turtlebot3_gazebo 패키지에서 turtlebot3_world.launch.py의 경로를 가져옵니다.
+    # 더미 맵 파일 경로 지정
+    my_pkg_share = get_package_share_directory('my_turtlebot_project')
+    dummy_map = os.path.join(my_pkg_share, 'maps', 'dummy_map.yaml')
+    print("Dummy map file path:", dummy_map)  # 디버깅용
+
+    # "map" 인자를 더미 맵 파일로 기본값 설정 (이 인자는 실제로 사용하지 않더라도 필요)
+    map_arg = DeclareLaunchArgument(
+        'map',
+        default_value=dummy_map,
+        description='Full path to map yaml file to load'
+    )
+
+    # Gazebo 실행: turtlebot3_gazebo의 world launch 파일 사용
     tb3_gazebo_dir = get_package_share_directory('turtlebot3_gazebo')
     tb3_world_launch = os.path.join(tb3_gazebo_dir, 'launch', 'turtlebot3_world.launch.py')
 
-    # turtlebot3_description 패키지 내에 있는 RViz 설정 파일 경로 (기본 모델 설정 파일 사용)
+    # SLAM 실행: slam_toolbox의 online_async_launch.py 사용
+    slam_toolbox_dir = get_package_share_directory('slam_toolbox')
+    slam_launch = os.path.join(slam_toolbox_dir, 'launch', 'online_async_launch.py')
+
+    # 네비게이션 실행: nav2_bringup의 bringup_launch.py 사용
+    nav2_bringup_dir = get_package_share_directory('nav2_bringup')
+    nav2_launch = os.path.join(nav2_bringup_dir, 'launch', 'bringup_launch.py')
+    # 기본 파라미터 파일 경로 (실제 파일 경로는 nav2_bringup 설치 상태에 따라 달라질 수 있음)
+    params_file = os.path.join(nav2_bringup_dir, 'params', 'nav2_params.yaml')
+
+    # RViz 실행: turtlebot3_description의 RViz 설정 파일 사용
     tb3_description_dir = get_package_share_directory('turtlebot3_description')
     rviz_config = os.path.join(tb3_description_dir, 'rviz', 'model.rviz')
 
     return LaunchDescription([
-        # Gazebo 실행: 기존 turtlebot3_world 런치파일 포함
+        map_arg,
+        IncludeLaunchDescription(PythonLaunchDescriptionSource(tb3_world_launch)),
+        IncludeLaunchDescription(PythonLaunchDescriptionSource(slam_launch)),
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(tb3_world_launch)
+            PythonLaunchDescriptionSource(nav2_launch),
+            launch_arguments={'map': dummy_map, 'params_file': params_file}.items()
         ),
-        # RViz 실행: rviz2 명령어와 설정 파일 적용
-        ExecuteProcess(
-            cmd=['rviz2', '-d', rviz_config],
-            output='screen'
+        ExecuteProcess(cmd=['rviz2', '-d', rviz_config], output='screen'),
+        # 초기 위치 메시지를 자동으로 publish하는 ExecuteProcess를 TimerAction으로 지연 실행 (예: 5초 후)
+        TimerAction(
+            period=5.0,
+            actions=[
+                ExecuteProcess(
+                    cmd=[
+                        'ros2', 'topic', 'pub', '--once', '/initialpose',
+                        'geometry_msgs/PoseWithCovarianceStamped',
+                        '{"header": {"frame_id": "map"}, '
+                        '"pose": {"pose": {"position": {"x": 1.0, "y": 1.0, "z": 0.0}, '
+                        '"orientation": {"x": 0.0, "y": 0.0, "z": 0.0, "w": 1.0}}, '
+                        '"covariance": [0.25, 0, 0, 0, 0, 0, 0, 0.25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}}'
+                    ],
+                    output='screen',
+                    shell=True
+                )
+            ]
         )
     ])

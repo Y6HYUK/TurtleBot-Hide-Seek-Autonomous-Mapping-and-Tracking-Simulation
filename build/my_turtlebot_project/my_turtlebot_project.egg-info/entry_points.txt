@@ -1,0 +1,2 @@
+[console_scripts]
+mapping_gui = my_turtlebot_project.mapping_gui:main

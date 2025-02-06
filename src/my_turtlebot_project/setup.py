@@ -12,6 +12,8 @@ setup(
         ('share/' + package_name, ['package.xml']),
         ### Add launch directory and files ###
         ('share/' + package_name + '/launch', ['launch/turtlebot_simulation.launch.py']),
+        ### Add maps fils ###
+        ('share/' + package_name + '/maps', ['maps/dummy_map.yaml', 'maps/dummy_map.pgm']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
