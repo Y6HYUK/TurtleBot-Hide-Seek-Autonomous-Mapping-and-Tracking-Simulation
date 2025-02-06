@@ -1,0 +1,50 @@
+[0.178s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'list', '-p', '--base-paths', '/home/yjh/junhyuk_project/turtlebot_ws']
+[0.178s] DEBUG:colcon:Parsed command line arguments: Namespace(log_base=None, log_level=None, verb_name='list', build_base='build', ignore_user_meta=False, metas=['./colcon.meta'], base_paths=['/home/yjh/junhyuk_project/turtlebot_ws'], packages_ignore=None, packages_ignore_regex=None, paths=None, packages_up_to=None, packages_up_to_regex=None, packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_select_by_dep=None, packages_skip_by_dep=None, packages_skip_up_to=None, packages_select_build_failed=False, packages_skip_build_finished=False, packages_select_test_failures=False, packages_skip_test_passed=False, packages_select=None, packages_skip=None, packages_select_regex=None, packages_skip_regex=None, packages_start=None, packages_end=None, allow_overriding=[], topological_order=False, names_only=False, paths_only=True, topological_graph=False, topological_graph_dot=False, topological_graph_density=False, topological_graph_legend=False, topological_graph_dot_cluster=False, topological_graph_dot_include_skipped=False, mixin_files=None, mixin=None, verb_parser=<colcon_mixin.mixin.mixin_argument.MixinArgumentDecorator object at 0x7a263b8b1ff0>, verb_extension=<colcon_package_information.verb.list.ListVerb object at 0x7a263b8b0ca0>, main=<bound method ListVerb.main of <colcon_package_information.verb.list.ListVerb object at 0x7a263b8b0ca0>>, mixin_verb=('list',))
+[0.254s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[0.255s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[0.255s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[0.255s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[0.255s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[0.255s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/yjh/junhyuk_project/turtlebot_ws'
+[0.255s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws) by extensions ['ignore', 'ignore_ament_install']
+[0.256s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws) by extension 'ignore'
+[0.256s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws) by extension 'ignore_ament_install'
+[0.256s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws) by extensions ['colcon_pkg']
+[0.256s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws) by extension 'colcon_pkg'
+[0.256s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws) by extensions ['colcon_meta']
+[0.256s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws) by extension 'colcon_meta'
+[0.256s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws) by extensions ['ros']
+[0.256s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws) by extension 'ros'
+[0.283s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws) by extensions ['cmake', 'python']
+[0.283s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws) by extension 'cmake'
+[0.283s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws) by extension 'python'
+[0.284s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws) by extensions ['python_setup_py']
+[0.284s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws) by extension 'python_setup_py'
+[0.284s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws/log) by extensions ['ignore', 'ignore_ament_install']
+[0.284s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws/log) by extension 'ignore'
+[0.284s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws/log) ignored
+[0.284s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws/src) by extensions ['ignore', 'ignore_ament_install']
+[0.284s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws/src) by extension 'ignore'
+[0.285s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws/src) by extension 'ignore_ament_install'
+[0.285s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws/src) by extensions ['colcon_pkg']
+[0.285s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws/src) by extension 'colcon_pkg'
+[0.285s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws/src) by extensions ['colcon_meta']
+[0.285s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws/src) by extension 'colcon_meta'
+[0.285s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws/src) by extensions ['ros']
+[0.285s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws/src) by extension 'ros'
+[0.285s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws/src) by extensions ['cmake', 'python']
+[0.285s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws/src) by extension 'cmake'
+[0.285s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws/src) by extension 'python'
+[0.285s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws/src) by extensions ['python_setup_py']
+[0.285s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws/src) by extension 'python_setup_py'
+[0.285s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws/src/my_turtlebot_project) by extensions ['ignore', 'ignore_ament_install']
+[0.286s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws/src/my_turtlebot_project) by extension 'ignore'
+[0.286s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws/src/my_turtlebot_project) by extension 'ignore_ament_install'
+[0.286s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws/src/my_turtlebot_project) by extensions ['colcon_pkg']
+[0.286s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws/src/my_turtlebot_project) by extension 'colcon_pkg'
+[0.286s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws/src/my_turtlebot_project) by extensions ['colcon_meta']
+[0.286s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws/src/my_turtlebot_project) by extension 'colcon_meta'
+[0.286s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws/src/my_turtlebot_project) by extensions ['ros']
+[0.286s] Level 1:colcon.colcon_core.package_identification:_identify(/home/yjh/junhyuk_project/turtlebot_ws/src/my_turtlebot_project) by extension 'ros'
+[0.291s] DEBUG:colcon.colcon_core.package_identification:Package '/home/yjh/junhyuk_project/turtlebot_ws/src/my_turtlebot_project' with type 'ros.ament_python' and name 'my_turtlebot_project'
+[0.291s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
