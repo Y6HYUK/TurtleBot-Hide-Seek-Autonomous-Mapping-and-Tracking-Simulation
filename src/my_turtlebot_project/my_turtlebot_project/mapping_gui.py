@@ -5,6 +5,7 @@ import subprocess
 import time
 import random
 import numpy as np
+import os
 
 import rclpy
 from rclpy.node import Node
@@ -20,53 +21,48 @@ from PyQt5.QtCore import QTimer
 class FrontierExplorationNode(Node):
     def __init__(self):
         super().__init__('frontier_exploration_node')
-        # 탐색 상태를 기록할 변수 (GUI에서 폴링)
         self.mapping_status = "Idle"
-        self.mapping_completed = False  # 매핑 완료 여부
+        self.mapping_completed = False
         
-        # 구독자 및 발행자 설정
         self.map_subscriber = self.create_subscription(
             OccupancyGrid, 'map', self.map_callback, 10)
         self.goal_status_subscriber = self.create_subscription(
             GoalStatusArray,
-            '/follow_path/_action/status',  # 실제 환경에 맞게 수정
+            '/follow_path/_action/status',  
             self.goal_status_callback,
             10)
         self.odom_subscriber = self.create_subscription(
-            Odometry,
-            '/odom',
-            self.odom_callback,
-            qos_profile_system_default)
-        self.goal_publisher = self.create_publisher(
-            PoseStamped, 'goal_pose', 10)
-        # 초기 위치 발행을 위한 publisher
+            Odometry, '/odom', self.odom_callback, qos_profile_system_default)
+        self.goal_publisher = self.create_publisher(PoseStamped, 'goal_pose', 10)
         self.initial_pose_pub = self.create_publisher(PoseWithCovarianceStamped, '/initialpose', 10)
         self.initial_pose_published = False
 
         self.map_array = None
         self.map_metadata = None
-        self.goal_reached = True  # 초기에는 목표 도착 상태로 가정
+        self.goal_reached = True
         self.robot_x = 0.0
         self.robot_y = 0.0
 
-        self.timer = None  # 타이머는 start_exploration()에서 생성
-        self.no_frontier_count = 0  # frontier 미발견 횟수 카운터
+        self.timer = None
+        self.no_frontier_count = 0
+        self.goal_fail_count = 0
+        self.last_goal_time = None
 
     def start_exploration(self):
         self.get_logger().info("Starting frontier exploration...")
         self.mapping_status = "Exploration started"
         self.mapping_completed = False
+        self.goal_fail_count = 0
         if not self.initial_pose_published:
             self.publish_initial_pose()
-        # 타이머 주기를 1초로 설정 (빈번하게 목표 산출)
         self.timer = self.create_timer(1.0, self.timer_callback)
 
     def publish_initial_pose(self):
         msg = PoseWithCovarianceStamped()
         msg.header.stamp = self.get_clock().now().to_msg()
         msg.header.frame_id = "map"
-        msg.pose.pose.position.x = 1.0   # 원하는 초기 x 좌표 (조정 가능)
-        msg.pose.pose.position.y = 1.0   # 원하는 초기 y 좌표 (조정 가능)
+        msg.pose.pose.position.x = 1.0
+        msg.pose.pose.position.y = 1.0
         msg.pose.pose.position.z = 0.0
         msg.pose.pose.orientation.x = 0.0
         msg.pose.pose.orientation.y = 0.0
@@ -88,7 +84,6 @@ class FrontierExplorationNode(Node):
         self.get_logger().info("Mapping marked as completed.")
         self.mapping_status = "Mapping completed"
         self.mapping_completed = True
-        # 타이머 중단: 더 이상 frontier 탐지를 실행하지 않도록 함.
         if self.timer is not None:
             self.timer.cancel()
 
@@ -104,10 +99,12 @@ class FrontierExplorationNode(Node):
                 self.goal_reached = True
                 self.mapping_status = "Goal reached"
                 self.get_logger().info("Goal reached successfully.")
+                self.goal_fail_count = 0
             elif current_status in [4, 5, 6]:
                 self.goal_reached = True
                 self.mapping_status = "Goal failed or aborted"
                 self.get_logger().info("Goal failed/aborted.")
+                self.goal_fail_count += 1
             else:
                 self.goal_reached = False
                 self.mapping_status = f"Goal status: {current_status}"
@@ -118,7 +115,7 @@ class FrontierExplorationNode(Node):
 
     def timer_callback(self):
         if self.mapping_completed:
-            return  # mapping이 완료되었으면 더 이상 진행하지 않음.
+            return
 
         if self.map_array is None or self.map_metadata is None:
             self.get_logger().info("Waiting for map data...")
@@ -126,8 +123,16 @@ class FrontierExplorationNode(Node):
             return
 
         if not self.goal_reached:
-            self.get_logger().info("Currently moving toward a goal; skipping frontier detection.")
-            self.mapping_status = "Moving toward goal"
+            if self.last_goal_time is not None:
+                elapsed = (self.get_clock().now() - self.last_goal_time).nanoseconds / 1e9
+                if elapsed > 5.0:
+                    self.get_logger().info("Goal timeout exceeded; resetting goal state and re-detecting frontier.")
+                    self.goal_reached = True
+                    self.last_goal_time = None
+                    self.no_frontier_count = 0
+            else:
+                self.get_logger().info("Currently moving toward a goal; skipping frontier detection.")
+                self.mapping_status = "Moving toward goal"
             return
 
         frontiers = self.detect_frontiers()
@@ -135,7 +140,7 @@ class FrontierExplorationNode(Node):
             self.get_logger().info("No frontiers detected.")
             self.mapping_status = "No frontiers"
             self.no_frontier_count += 1
-            if self.no_frontier_count >= 3:
+            if self.no_frontier_count >= 1:
                 self.complete_mapping()
             return
         else:
@@ -150,7 +155,7 @@ class FrontierExplorationNode(Node):
             self.get_logger().info("No valid frontiers found (all near walls).")
             self.mapping_status = "No valid frontiers"
             self.no_frontier_count += 1
-            if self.no_frontier_count >= 3:
+            if self.no_frontier_count >= 1:
                 self.complete_mapping()
             return
 
@@ -208,16 +213,21 @@ class FrontierExplorationNode(Node):
         self.get_logger().info(f"Published goal: x={goal[0]:.3f}, y={goal[1]:.3f}")
         self.goal_reached = False
         self.mapping_status = f"Moving to goal: ({goal[0]:.2f}, {goal[1]:.2f})"
+        self.last_goal_time = self.get_clock().now()
 
     def save_map(self):
         self.get_logger().info("Saving map...")
-        import os
-        from ament_index_python.packages import get_package_share_directory
-        package_share = get_package_share_directory('my_turtlebot_project')
-        map_dir = os.path.join(package_share, 'maps')
+        # __file__ 기반 상대 경로 계산
+        path = os.path.abspath(__file__)
+        # 만약 build 경로가 포함되어 있다면 src로 대체
+        if "build" in path:
+            path = path.replace("build" + os.sep + "my_turtlebot_project", "src" + os.sep + "my_turtlebot_project")
+        base_dir = os.path.normpath(os.path.join(os.path.dirname(path), ".."))
+        map_dir = os.path.join(base_dir, "maps")
         if not os.path.exists(map_dir):
             os.makedirs(map_dir)
         map_file_prefix = os.path.join(map_dir, "map")
+        time.sleep(2)
         try:
             subprocess.run(
                 ["ros2", "run", "nav2_map_server", "map_saver_cli", "-f", map_file_prefix],
@@ -229,7 +239,7 @@ class FrontierExplorationNode(Node):
             self.get_logger().error("Failed to save map: " + str(e))
             self.mapping_status = "Map saving failed"
 
-# GUI 클래스: PyQt5를 이용하여 버튼 클릭 시 탐색 시작, 매핑 완료 표시 및 맵 저장 요청
+# GUI 클래스: PyQt5를 이용한 인터페이스
 class MappingGUI(QWidget):
     def __init__(self, mapping_controller: FrontierExplorationNode):
         super().__init__()
@@ -263,7 +273,6 @@ class MappingGUI(QWidget):
                 color: #333333;
             }
         """)
-
         main_layout = QVBoxLayout()
         self.status_label = QLabel("Mapping status: Idle")
         main_layout.addWidget(self.status_label)
@@ -295,7 +304,6 @@ class MappingGUI(QWidget):
     
     def complete_mapping(self):
         self.mapping_controller.complete_mapping()
-        # GUI: 완료 후 start 버튼을 재활성화 (필요 시)
         self.start_button.setEnabled(True)
     
     def save_map(self):
