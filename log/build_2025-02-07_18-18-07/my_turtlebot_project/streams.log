@@ -1,0 +1,27 @@
+[0.830s] Invoking command in '/home/yjh/junhyuk_project/turtlebot_ws/build/my_turtlebot_project': PYTHONPATH=/home/yjh/junhyuk_project/turtlebot_ws/build/my_turtlebot_project/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/yjh/junhyuk_project/turtlebot_ws/install/my_turtlebot_project/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/yjh/junhyuk_project/turtlebot_ws/build/my_turtlebot_project/build --no-deps symlink_data
+[1.156s] running develop
+[1.424s] running egg_info
+[1.445s] creating my_turtlebot_project.egg-info
+[1.445s] writing my_turtlebot_project.egg-info/PKG-INFO
+[1.446s] writing dependency_links to my_turtlebot_project.egg-info/dependency_links.txt
+[1.446s] writing entry points to my_turtlebot_project.egg-info/entry_points.txt
+[1.446s] writing requirements to my_turtlebot_project.egg-info/requires.txt
+[1.447s] writing top-level names to my_turtlebot_project.egg-info/top_level.txt
+[1.447s] writing manifest file 'my_turtlebot_project.egg-info/SOURCES.txt'
+[1.506s] reading manifest file 'my_turtlebot_project.egg-info/SOURCES.txt'
+[1.507s] writing manifest file 'my_turtlebot_project.egg-info/SOURCES.txt'
+[1.535s] running build_ext
+[1.535s] Creating /home/yjh/junhyuk_project/turtlebot_ws/install/my_turtlebot_project/lib/python3.10/site-packages/my-turtlebot-project.egg-link (link to .)
+[1.536s] Installing mapping_gui script to /home/yjh/junhyuk_project/turtlebot_ws/install/my_turtlebot_project/lib/my_turtlebot_project
+[1.536s] 
+[1.536s] Installed /home/yjh/junhyuk_project/turtlebot_ws/build/my_turtlebot_project
+[1.536s] running symlink_data
+[1.537s] creating /home/yjh/junhyuk_project/turtlebot_ws/install/my_turtlebot_project/share/ament_index/resource_index/packages
+[1.537s] symbolically linking /home/yjh/junhyuk_project/turtlebot_ws/build/my_turtlebot_project/resource/my_turtlebot_project -> /home/yjh/junhyuk_project/turtlebot_ws/install/my_turtlebot_project/share/ament_index/resource_index/packages
+[1.537s] symbolically linking /home/yjh/junhyuk_project/turtlebot_ws/build/my_turtlebot_project/package.xml -> /home/yjh/junhyuk_project/turtlebot_ws/install/my_turtlebot_project/share/my_turtlebot_project
+[1.537s] creating /home/yjh/junhyuk_project/turtlebot_ws/install/my_turtlebot_project/share/my_turtlebot_project/launch
+[1.537s] symbolically linking /home/yjh/junhyuk_project/turtlebot_ws/build/my_turtlebot_project/launch/turtlebot_simulation.launch.py -> /home/yjh/junhyuk_project/turtlebot_ws/install/my_turtlebot_project/share/my_turtlebot_project/launch
+[1.537s] creating /home/yjh/junhyuk_project/turtlebot_ws/install/my_turtlebot_project/share/my_turtlebot_project/maps
+[1.538s] symbolically linking /home/yjh/junhyuk_project/turtlebot_ws/build/my_turtlebot_project/maps/dummy_map.yaml -> /home/yjh/junhyuk_project/turtlebot_ws/install/my_turtlebot_project/share/my_turtlebot_project/maps
+[1.538s] symbolically linking /home/yjh/junhyuk_project/turtlebot_ws/build/my_turtlebot_project/maps/dummy_map.pgm -> /home/yjh/junhyuk_project/turtlebot_ws/install/my_turtlebot_project/share/my_turtlebot_project/maps
+[1.580s] Invoked command in '/home/yjh/junhyuk_project/turtlebot_ws/build/my_turtlebot_project' returned '0': PYTHONPATH=/home/yjh/junhyuk_project/turtlebot_ws/build/my_turtlebot_project/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/yjh/junhyuk_project/turtlebot_ws/install/my_turtlebot_project/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/yjh/junhyuk_project/turtlebot_ws/build/my_turtlebot_project/build --no-deps symlink_data

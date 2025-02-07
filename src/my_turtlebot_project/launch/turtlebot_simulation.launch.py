@@ -1,8 +1,9 @@
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, ExecuteProcess, DeclareLaunchArgument, TimerAction
+from launch.actions import IncludeLaunchDescription, ExecuteProcess, DeclareLaunchArgument, TimerAction, GroupAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, Command
 from ament_index_python.packages import get_package_share_directory
+from launch_ros.actions import Node, PushRosNamespace
 import os
 
 def generate_launch_description():
@@ -36,8 +37,31 @@ def generate_launch_description():
     tb3_description_dir = get_package_share_directory('turtlebot3_description')
     rviz_config = os.path.join(tb3_description_dir, 'rviz', 'model.rviz')
 
+    # 추가 터틀봇(예: turtlebot3_2)을 위한 robot_state_publisher 노드 그룹을 별도 네임스페이스로 실행
+    # 여기서는 turtlebot3_burger의 URDF (xacro) 파일을 사용합니다.
+    # (필요에 따라 추가 로봇에 맞는 컨트롤러나 기타 노드도 함께 실행해야 합니다.)
+    additional_robot = GroupAction(
+        actions=[
+            PushRosNamespace('turtlebot3_2'),
+            Node(
+                package='robot_state_publisher',
+                executable='robot_state_publisher',
+                name='robot_state_publisher',
+                output='screen',
+                parameters=[{
+                    'robot_description': Command([
+                        'xacro ',
+                        os.path.join(tb3_description_dir, 'urdf', 'turtlebot3_burger.urdf')
+                    ])
+                }]
+            )
+            # 추가로 컨트롤러나 기타 노드를 실행하려면 이곳에 Node 액션을 추가하세요.
+        ]
+    )
+
     return LaunchDescription([
         map_arg,
+        # 기본 터틀봇, Gazebo, SLAM, Nav2, RViz 실행
         IncludeLaunchDescription(PythonLaunchDescriptionSource(tb3_world_launch)),
         IncludeLaunchDescription(PythonLaunchDescriptionSource(slam_launch)),
         IncludeLaunchDescription(
@@ -62,5 +86,7 @@ def generate_launch_description():
                     shell=True
                 )
             ]
-        )
+        ),
+        # 추가 터틀봇 관련 그룹 액션 실행
+        additional_robot
     ])

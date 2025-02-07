@@ -125,7 +125,7 @@ class FrontierExplorationNode(Node):
         if not self.goal_reached:
             if self.last_goal_time is not None:
                 elapsed = (self.get_clock().now() - self.last_goal_time).nanoseconds / 1e9
-                if elapsed > 5.0:
+                if elapsed > 7.0:
                     self.get_logger().info("Goal timeout exceeded; resetting goal state and re-detecting frontier.")
                     self.goal_reached = True
                     self.last_goal_time = None
@@ -244,6 +244,8 @@ class MappingGUI(QWidget):
     def __init__(self, mapping_controller: FrontierExplorationNode):
         super().__init__()
         self.mapping_controller = mapping_controller
+        # 추가로 소환한 로봇의 번호 (처음 추가 로봇은 turtlebot3_2 부터)
+        self.robot_counter = 2
         self.init_ui()
     
     def init_ui(self):
@@ -291,6 +293,11 @@ class MappingGUI(QWidget):
         self.save_button.setEnabled(False)
         button_layout.addWidget(self.save_button)
         
+        # Spawn Additional Robot 버튼 추가 (영어)
+        self.spawn_button = QPushButton("Spawn Additional Robot")
+        self.spawn_button.clicked.connect(self.spawn_robot)
+        button_layout.addWidget(self.spawn_button)
+        
         main_layout.addLayout(button_layout)
         self.setLayout(main_layout)
         
@@ -316,6 +323,33 @@ class MappingGUI(QWidget):
             self.save_button.setEnabled(True)
         else:
             self.save_button.setEnabled(False)
+    
+    # Spawn Additional Robot 기능 (별도 스레드에서 실행)
+    def spawn_robot(self):
+        self.status_label.setText("Spawning additional robot...")
+        threading.Thread(target=self._spawn_robot_command, daemon=True).start()
+    
+    def _spawn_robot_command(self):
+        # 고유한 로봇 이름 및 스폰 위치 지정
+        entity_name = f"turtlebot3_{self.robot_counter}"
+        spawn_x = 0.95 * self.robot_counter  # x 좌표 (필요에 따라 조정)
+        spawn_y = 0.0
+        # spawn_entity.py 호출 시, -file, -entity, -robot_namespace, 위치, -unpause 옵션 사용
+        cmd = (
+            f"ros2 run gazebo_ros spawn_entity.py "
+            f"-file $(ros2 pkg prefix turtlebot3_gazebo)/share/turtlebot3_gazebo/models/turtlebot3_burger/model.sdf "
+            f"-entity {entity_name} "
+            f"-robot_namespace /{entity_name} "
+            f"-x {spawn_x} -y {spawn_y} -z 0.01 -Y 0.0 -unpause"
+        )
+        try:
+            # shell=True로 실행하여 $(ros2 pkg prefix ...)가 제대로 처리되도록 함.
+            subprocess.run(cmd, shell=True, check=True)
+            QTimer.singleShot(0, lambda: self.status_label.setText(f"Successfully spawned {entity_name}!"))
+            self.robot_counter += 1
+        except subprocess.CalledProcessError as e:
+            QTimer.singleShot(0, lambda: self.status_label.setText("Spawn additional robot failed: " + str(e)))
+
 
 def rclpy_spin(node):
     rclpy.spin(node)
