@@ -1,0 +1,16 @@
+running develop
+running egg_info
+writing my_turtlebot_project.egg-info/PKG-INFO
+writing dependency_links to my_turtlebot_project.egg-info/dependency_links.txt
+writing entry points to my_turtlebot_project.egg-info/entry_points.txt
+writing requirements to my_turtlebot_project.egg-info/requires.txt
+writing top-level names to my_turtlebot_project.egg-info/top_level.txt
+reading manifest file 'my_turtlebot_project.egg-info/SOURCES.txt'
+writing manifest file 'my_turtlebot_project.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/yjh/junhyuk_project/turtlebot_ws/install/my_turtlebot_project/lib/python3.10/site-packages/my-turtlebot-project.egg-link (link to .)
+Installing mapping_gui script to /home/yjh/junhyuk_project/turtlebot_ws/install/my_turtlebot_project/lib/my_turtlebot_project
+Installing spawn_controller script to /home/yjh/junhyuk_project/turtlebot_ws/install/my_turtlebot_project/lib/my_turtlebot_project
+
+Installed /home/yjh/junhyuk_project/turtlebot_ws/build/my_turtlebot_project
+running symlink_data

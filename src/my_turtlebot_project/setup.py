@@ -23,7 +23,8 @@ setup(
     license='TODO: License declaration',
     entry_points={
         'console_scripts': [
-            'mapping_gui = my_turtlebot_project.mapping_gui:main'
+            'mapping_gui = my_turtlebot_project.mapping_gui:main',
+            'spawn_controller = my_turtlebot_project.spawn_controller_node:main'
         ],
     },
 )

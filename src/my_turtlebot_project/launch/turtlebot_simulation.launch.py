@@ -51,7 +51,7 @@ def generate_launch_description():
                 parameters=[{
                     'robot_description': Command([
                         'xacro ',
-                        os.path.join(tb3_description_dir, 'urdf', 'turtlebot3_burger.urdf')
+                        os.path.join(tb3_description_dir, 'urdf', 'turtlebot3_waffle_pi.urdf')
                     ])
                 }]
             )

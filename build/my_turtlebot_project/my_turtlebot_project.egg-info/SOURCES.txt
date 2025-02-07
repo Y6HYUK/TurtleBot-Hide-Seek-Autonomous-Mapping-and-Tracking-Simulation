@@ -6,6 +6,7 @@ maps/dummy_map.pgm
 maps/dummy_map.yaml
 my_turtlebot_project/__init__.py
 my_turtlebot_project/mapping_gui.py
+my_turtlebot_project/spawn_controller_node.py
 my_turtlebot_project.egg-info/PKG-INFO
 my_turtlebot_project.egg-info/SOURCES.txt
 my_turtlebot_project.egg-info/dependency_links.txt
