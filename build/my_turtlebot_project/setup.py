@@ -1,1 +1,0 @@
-/home/yjh/junhyuk_project/turtlebot_ws/src/my_turtlebot_project/setup.py
